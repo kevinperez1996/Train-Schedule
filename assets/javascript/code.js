@@ -56,10 +56,10 @@
     var trainTime = snapShot.val().time;
     var trainFreq = snapShot.val().frequency;
 
-    console.log(trainName);
-    console.log(trainDest);
-    console.log(trainTime);
-    console.log(trainFreq);
+    console.log("Train Name: " + trainName);
+    console.log("Train Destination: " + trainDest);
+    console.log("First Train Time: " + trainTime);
+    console.log("Train Frequency: " + trainFreq);
 
     var tableRow = $("<tr>").append(
         $("<td>").text(trainName),
@@ -68,5 +68,21 @@
     );
 
     $("#train-table").append(tableRow);
+    
+    //get the current time
+    var currentTime = moment().format("HH:mm");
+    console.log("Current Time: " + currentTime);
 
-  })
+    //calculate the next arrival using the first train time and train frequency
+    var NextArrival = moment(currentTime, "HH:mm").add(trainFreq, "minutes").format("HH:mm");
+    console.log( "Next Train: " + NextArrival);
+
+   // var difference = moment().diff(moment(trainTime, "HH:mm"), "minutes");
+   
+    
+   //calculate dif between first train and now
+    var minutesAway = moment().diff(moment(NextArrival, "HH:mm"), "minutes");
+    console.log(minutesAway);
+    
+});
+
