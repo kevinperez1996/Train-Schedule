@@ -23,6 +23,8 @@
     var trainTime = $("#first-train-input").val().trim();
     var trainFreq = $("#frequency-input").val().trim();
 
+    
+    
     //Object to hold all values --- will be used to push and store data in database
     var addedTrain = {
         train: trainName,
@@ -30,16 +32,41 @@
         time: trainTime,
         frequency: trainFreq
     };
-
+    
     database.ref().push(addedTrain); 
-
-    console.log(addedTrain.train);
-    console.log(addedTrain.destination);
-    console.log(addedTrain.time);
-    console.log(addedTrain.frequency);
-
-
-
-
+    
+   // console.log(addedTrain.train);
+    //console.log(addedTrain.destination);
+    //console.log(addedTrain.time);
+   // console.log(addedTrain.frequency);
+    
+    
+    $("#train-name-input").val("");
+    $("#destination-input").val("");
+    $("#first-train-input").val("");
+    $("#frequency-input").val("");
 
   });
+
+  database.ref().on("child_added", function (snapShot){
+    //console.log(snapShot.val());
+
+    var trainName = snapShot.val().train;
+    var trainDest = snapShot.val().destination;
+    var trainTime = snapShot.val().time;
+    var trainFreq = snapShot.val().frequency;
+
+    console.log(trainName);
+    console.log(trainDest);
+    console.log(trainTime);
+    console.log(trainFreq);
+
+    var tableRow = $("<tr>").append(
+        $("<td>").text(trainName),
+        $("<td>").text(trainDest),
+        $("<td>").text(trainFreq),
+    );
+
+    $("#train-table").append(tableRow);
+
+  })
