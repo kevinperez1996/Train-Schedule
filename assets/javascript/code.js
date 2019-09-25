@@ -67,8 +67,6 @@ database.ref().on("child_added", function (snapShot) {
 
     var firstTrain = moment(trainTime, "HH:mm").subtract(1, "years");
 
-
-
     //calculate dif between first train and now
     var minutesAway; // = moment().diff(moment(nextArrival, "HH:mm"), "minutes");
     
