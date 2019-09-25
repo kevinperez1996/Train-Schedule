@@ -65,21 +65,28 @@ database.ref().on("child_added", function (snapShot) {
 
 
     //get the current time
-    var currentTime = moment().format("HH:mm");
+    var currentTime = moment().subtract(1, "years")
     console.log("Current Time: " + currentTime);
 
+    
     //calculate the next arrival using the first train time and train frequency
-
     var nextArrival = moment(trainTime, "HH:mm").add(trainFreq, "minutes").format("HH:mm");
     console.log("Next Train: " + nextArrival);
     
-    var firsttime = moment(trainTime, "HH:mm").format("HH:mm");
+    var firstTrain = moment(trainTime, "HH:mm").subtract(1, "years");
 
     
     
     //calculate dif between first train and now
     var minutesAway = moment().diff(moment(nextArrival, "HH:mm"), "minutes");
     console.log(minutesAway);
+
+    if ((currentTime - firstTrain) < 0){
+        nextArrival = trainTime;
+    }
+    else {
+        nextArrival = moment(trainTime, "HH:mm").add(trainFreq, "minutes").format("HH:mm");
+    }
 
     var tableRow = $("<tr>").append(
         $("<td>").text(trainName),
