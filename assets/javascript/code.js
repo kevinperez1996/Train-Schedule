@@ -56,36 +56,39 @@ database.ref().on("child_added", function (snapShot) {
     var trainFreq = snapShot.val().frequency;
 
 
-
-    //get the current time
-    var currentTime = moment().subtract(1, "years")
-
-
-    //calculate the next arrival using the first train time and train frequency
-    var nextArrival; // = moment(trainTime, "HH:mm").add(trainFreq, "minutes").format("HH:mm");
-   
-
-    var firstTrain = moment(trainTime, "HH:mm").subtract(1, "years");
-
-    //calculate dif between first train and now
-    var minutesAway; // = moment().diff(moment(nextArrival, "HH:mm"), "minutes");
     
+    //get the current time
+    var currentTime = moment().subtract(1, "years");
+    console.log(currentTime);
+    
+    
+    var firstTrain = moment(trainTime, "HH:mm").subtract(1, "years");
+    console.log(firstTrain);
+    
+    //calculate the next arrival using the first train time and train frequency
+    
+    var timediff = currentTime.diff(firstTrain, "m");
+    console.log(timediff);
+   
+    var remainder = timediff % snapShot.val().frequency;
+   
+    //calculate dif between first train and now
+    var minutesAway = snapShot.val().frequency - remainder;
 
-    if ((currentTime - firstTrain) < 0) {
-        nextArrival = trainTime;
-        minutesAway = moment().diff(moment(nextArrival, "HH:mm"), "minutes");
-    }
-    else {
-        nextArrival = moment(trainTime, "HH:mm").add(trainFreq, "minutes").format("HH:mm");
-        minutesAway = moment().diff(moment(nextArrival, "HH:mm"), "minutes");
-    }
+    var nextArrival = moment().add(minutesAway, "minutes");
+    nextArrival = moment(nextArrival).format("hh:mm a");
 
+    if (timediff< 0) {
+        nextArrival = moment(trainTime, "HH:mm").format("hh:mm a");
+        minutesAway = ((moment().diff(moment(nextArrival, "hh:mm a"), "minutes")*-1)+1);
+    }
+   
     var tableRow = $("<tr>").append(
         $("<td>").text(trainName),
         $("<td>").text(trainDest),
         $("<td>").text(trainFreq + " min"),
-        $("<td>").text(moment(nextArrival, "HH:mm").format("hh:mm a")),
-        $("<td>").text((minutesAway * -1) + 1 + " min")
+        $("<td>").text(nextArrival),
+        $("<td>").text(minutesAway)
     );
 
     $("#train-table").append(tableRow);
